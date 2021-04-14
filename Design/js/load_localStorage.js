@@ -12,13 +12,18 @@ function requestData() {
 	$.ajax({
 		url: "/api/list",
 		type: "GET",
+		headers: {"Authorization": `Bearer ${localStorage.getItem('access_token')}`},
 
 		success: function(response) {
 			let data = response["data"]
 			let len = response["data"].length
+
+			console.log(data)
 		}
 	})
 }
+
+requestData()
 
 function postData(todo, doing, done, trash) {
 	$.ajax({
@@ -50,11 +55,11 @@ function login(username, password) {
 
 		success: function(response) {
 			var a = JSON.parse(response)
-			console.log(a.token.access_token)
+			return a.access_token
 		},
 
 		error: function(response) {
-			console.log(response)
+			return false
 		}
 	})
 }

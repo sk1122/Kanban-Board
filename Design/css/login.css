@@ -1,10 +1,10 @@
 body {
   margin: 0;
-	background: rgb(0,0,0);
-background: -moz-linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(4,30,35,1) 44%, rgba(0,83,98,1) 100%);
-background: -webkit-linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(4,30,35,1) 44%, rgba(0,83,98,1) 100%);
-background: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(4,30,35,1) 44%, rgba(0,83,98,1) 100%);
-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#000000",endColorstr="#005362",GradientType=1);
+  background: rgb(0,0,0);
+  background: -moz-linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(4,30,35,1) 44%, rgba(0,83,98,1) 100%);
+  background: -webkit-linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(4,30,35,1) 44%, rgba(0,83,98,1) 100%);
+  background: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(4,30,35,1) 44%, rgba(0,83,98,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#000000",endColorstr="#005362",GradientType=1);
   font-family: 'Roboto', sans-serif;
 }
 
@@ -71,6 +71,7 @@ h1 {
 .center {
   height: 100vh;
   display: flex;
+  flex-flow: column;
   justify-content: center;
   align-items: center;
 }
@@ -156,4 +157,12 @@ h1 {
 
 .wrong #inputProgress {
   border-color: #ff2d26;
+}
+
+.signup {
+  color: #fff;
+}
+
+.signup a {
+  font-weight: 600;
 }
