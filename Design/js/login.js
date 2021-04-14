@@ -1,3 +1,4 @@
+
 var questions = [
   {question:"What's your username?"},
   {question:"What's your email?", pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/},
@@ -20,6 +21,20 @@ var questions = [
   with the key `value`. 
 
  **********/
+
+function login(username, password) {
+  return $.ajax({
+    url: "/api/login",
+    type: "POST",
+    data: `{"username": "${username}", "password": "${password}"}`,
+    dataType: "text"
+  }).then((response) => {
+    var data = JSON.parse(response);
+    return data.token.access_token;
+  }).fail((response) => {
+    return false;
+  })
+}
 
 ;(function(){
 
@@ -52,7 +67,7 @@ var questions = [
   }
   
   // when all the questions have been answered
-  function done() {
+  async function done() {
     
     // remove the box if there is no next question
     register.className = 'close'
@@ -65,9 +80,8 @@ var questions = [
       setTimeout(function() {h1.style.opacity = 1}, 50)
     }, eTime)
 
-    setTimeout(function() {
-      document.location.replace("http://localhost:8000")
-    }, 3000)
+    let access_token = await login(questions[0].value, questions[2].value)
+    localStorage.setItem("access_token", access_token)
   }
 
   // when submitting the current question
