@@ -23,11 +23,9 @@ function requestData() {
 	})
 }
 
-requestData()
-
 function postData(todo, doing, done, trash) {
 	$.ajax({
-		url: "/api/api/todo/list",
+		url: "/api/todo/list",
 		type: "POST",
 		data: {
 			"todo": todo,
@@ -42,24 +40,6 @@ function postData(todo, doing, done, trash) {
 		},
 
 		error: function(response) {
-		}
-	})
-}
-
-function login(username, password) {
-	$.ajax({
-		url: "/api/login",
-		type: "POST",
-		data: '{"username": "sk1122", "password": "satyam#789"}',
-		dataType: "text",
-
-		success: function(response) {
-			var a = JSON.parse(response)
-			return a.access_token
-		},
-
-		error: function(response) {
-			return false
 		}
 	})
 }

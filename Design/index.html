@@ -2,6 +2,7 @@
 <html>
 <head>
 	<title>Kanban Board</title>
+	<link rel="stylesheet" type="text/css" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 </head>
 <body>
@@ -18,11 +19,25 @@
 	</div>
 
 	<!-- Inline Form -->
-	<div class="form">
+	<!-- <div class="form">
 		<form id="form">
 			<input class="add-todo" type="text" name="Todo" placeholder="Enter a Task">
 			<input class="btn" type="submit" name="Submit" value="Add Todo">
 		</form>
+	</div> -->
+
+	<div class="center">
+		<div id="register">
+
+			<i id="progressButton" class="ion-android-arrow-forward next"></i>
+
+			<div id="inputContainer">
+				<input id="inputField" required autofocus />
+				<label id="inputLabel"></label>
+				<div id="inputProgress"></div>
+			</div>
+
+		</div>
 	</div>
 
 	<!-- Kanban board -->
@@ -58,5 +73,6 @@
 	<script src="js/index.js"></script>
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 	<script src="js/load_localStorage.js"></script>
+	<script src="js/inputHandler.js"></script>
 </body>
 </html>
