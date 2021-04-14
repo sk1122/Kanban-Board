@@ -103,25 +103,68 @@ function check_drag() {
 
 check_drag()
 
-var formData = ""
 
-var form = document.getElementById('form');
-form.addEventListener("submit", function(e) {
-	e.preventDefault()
+// Handles Input
+const inputHandler = () => {
+	;(function(){
 
-	var formElements=document.getElementById("form").elements;
-	for (var i=0; i<formElements.length; i++)
-	    if (formElements[i].type!="submit")
-	        formData = formElements[i].value
+	  var tTime = 100  // transition transform time from #register in ms
+	  var wTime = 200  // transition width time from #register in ms
+	  var eTime = 1000 // transition width time from inputLabel in ms
 
-	let appendDatas = `<div class="item" draggable="true">${formData}</div>`
-	lists[0].innerHTML += appendDatas;
-	todo.push(formData);
-	localStorage.setItem("todo", todo)
-	lists[0].classList.remove("wh")
+	  // init
+	  // --------------
+	  var position = 0
 
-	list_items = document.querySelectorAll(".item");
-})
+	  putQuestion()
+
+	  progressButton.addEventListener('click', done)
+	  inputField.addEventListener('keyup', function(e){
+	    transform(0, 0) // ie hack to redraw
+	    if(e.keyCode == 13) done()
+	  })
+
+	  // functions
+	  // --------------
+
+	  // load the next question
+	  function putQuestion() {
+	    inputLabel.innerHTML = "What do you want to do today?"
+	    inputField.value = ''
+	    inputField.type = 'text'  
+	    inputField.focus()
+	    showCurrent()
+	  }
+	  
+	  // when all the questions have been answered
+	  async function done() {
+	    let appendDatas = `<div class="item" draggable="true">${inputField.value}</div>`
+		lists[0].innerHTML += appendDatas;
+		todo.push(inputField.value);
+		localStorage.setItem("todo", todo)
+		lists[0].classList.remove("wh")
+
+		list_items = document.querySelectorAll(".item");
+	  }
+
+	  // helper
+	  // --------------
+
+	  function showCurrent(callback) {
+	    inputContainer.style.opacity = 1
+	    inputProgress.style.transition = ''
+	    inputProgress.style.width = '100%'
+	    setTimeout(callback, wTime)
+	  }
+
+	  function transform(x, y) {
+	    register.style.transform = 'translate(' + x + 'px ,  ' + y + 'px)'
+	  }
+
+	}())
+}
+
+inputHandler();
 
 var target = document.querySelector('.todo-list')
 // create an observer instance
