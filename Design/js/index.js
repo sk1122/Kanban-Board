@@ -18,19 +18,103 @@ var draggedItem = null;
 
 var list_items_length = list_items.length;
 
+function removeItem(item, list) {
+	if(list == 'todo') {
+		if(doing.includes(item)) {
+			let x = doing.indexOf(item)
+			doing.splice(x, 1)
+		}
+
+		if(done.includes(item)) {
+			let x = done.indexOf(item)
+			done.splice(x, 1)
+		}
+
+		if(trash.includes(item)) {
+			let x = trash.indexOf(item)
+			trash.splice(x, 1)
+		}
+	}
+
+	else if(list == 'doing') {
+		if(todo.includes(item)) {
+			let x = todo.indexOf(item)
+			todo.splice(x, 1)
+		}
+
+		if(done.includes(item)) {
+			let x = done.indexOf(item)
+			done.splice(x, 1)
+		}
+
+		if(trash.includes(item)) {
+			let x = trash.indexOf(item)
+			trash.splice(x, 1)
+		}
+	}
+
+	else if(list == 'done') {
+		if(doing.includes(item)) {
+			let x = doing.indexOf(item)
+			doing.splice(x, 1)
+		}
+
+		if(todo.includes(item)) {
+			let x = todo.indexOf(item)
+			todo.splice(x, 1)
+		}
+
+		if(trash.includes(item)) {
+			let x = trash.indexOf(item)
+			trash.splice(x, 1)
+		}
+	}
+
+	else if(list == 'trash') {
+		if(doing.includes(item)) {
+			let x = doing.indexOf(item)
+			doing.splice(x, 1)
+		}
+
+		if(done.includes(item)) {
+			let x = done.indexOf(item)
+			done.splice(x, 1)
+		}
+
+		if(todo.includes(item)) {
+			let x = todo.indexOf(item)
+			todo.splice(x, 1)
+		}
+	}
+
+	localStorage.setItem("todo", todo)
+	localStorage.setItem("doing", doing)
+	localStorage.setItem("done", done)
+	localStorage.setItem("trash", trash)
+}
+
 function addList(list) {
+	console.log(list)
 	if(list.classList.contains("todo-list")) {
-		if(!todo.includes(draggedItem.textContent))
+		if(!todo.includes(draggedItem.textContent)) {
 			todo.push(draggedItem.textContent);
+			removeItem(draggedItem.textContent, 'todo');
+		}
 	} else if(list.classList.contains("doing-list")) {
-		if(!doing.includes(draggedItem.textContent))
+		if(!doing.includes(draggedItem.textContent)) {
 			doing.push(draggedItem.textContent)
+			removeItem(draggedItem.textContent, 'doing');
+		}
 	} else if(list.classList.contains("done-list")) {
-		if(!done.includes(draggedItem.textContent))
+		if(!done.includes(draggedItem.textContent)) {
 			done.push(draggedItem.textContent)
+			removeItem(draggedItem.textContent, 'done');
+		}
 	} else if(list.classList.contains("trash-list")) {
-		if(!trash.includes(draggedItem.textContent))
+		if(!trash.includes(draggedItem.textContent)) {
 			trash.push(draggedItem.textContent)
+			removeItem(draggedItem.textContent, 'trash');
+		}
 	}
 	localStorage.setItem("todo", todo)
 	localStorage.setItem("doing", doing)
@@ -42,28 +126,21 @@ function check_drag() {
 	for(let i = 0; i < list_items_length; i++) {
 		const item = list_items[i];
 
+		item.addEventListener("dblclick", function() {
+			item.setAttribute("contenteditable", "true")
+
+			item.addEventListener("dblclick", function() {
+				item.removeAttribute("contenteditable", "true")
+			})
+		})
+
 		item.addEventListener("dragstart", function() {
 			draggedItem = item;
 			if(draggedItem.parentElement.childElementCount === 1) {
 				draggedItem.parentElement.classList.add("wh")
 			}
-			if(draggedItem.parentElement.classList.contains("todo-list")) {
-				var x = todo.indexOf(draggedItem.textContent);
-				todo.splice(x, 1);
-			} else if(draggedItem.parentElement.classList.contains("doing-list")) {
-				var x = doing.indexOf(draggedItem.textContent);
-				doing.splice(x, 1);
-			} else if(draggedItem.parentElement.classList.contains("done-list")) {
-				var x = done.indexOf(draggedItem.textContent);
-				done.splice(x, 1);
-			} else if(draggedItem.parentElement.classList.contains("trash-list")) {
-				var x = trash.indexOf(draggedItem.textContent);
-				trash.splice(x, 1);
-			}
-			localStorage.setItem("todo", todo)
-			localStorage.setItem("doing", doing)
-			localStorage.setItem("done", done)
-			localStorage.setItem("trash", trash)
+			addList(draggedItem.parentElement)
+			console.log("Added")
 			setTimeout(function() {
 				item.style.display = "none";
 			}, 0)

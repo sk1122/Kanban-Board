@@ -81,6 +81,7 @@ function login(username, password) {
     }, eTime)
 
     let access_token = await login(questions[0].value, questions[2].value)
+    localStorage.removeItem("access_token")
     localStorage.setItem("access_token", access_token)
   }
 

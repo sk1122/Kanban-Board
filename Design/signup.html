@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Sign Up - Kanban Board</title>
+	<link rel="stylesheet" type="text/css" href="css/signup.css">
+	<link rel="stylesheet" type="text/css" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+</head>
+<body>
+	<!-- Navbar -->
+	<div class="nav">
+		<nav>
+			<a href="#" class="brand">Kanban Board</a>
+
+			<ul class="nav-items">
+				<li class="nav-item"><a href="index.html">Home</a></li>
+				<li class="nav-item"><a href="login.html">Login</a></li>
+			</ul>
+		</nav>
+	</div>
+
+	<div id="progress"></div>
+
+	<div class="center">
+		<div id="register">
+
+			<i id="progressButton" class="ion-android-arrow-forward next"></i>
+
+			<div id="inputContainer">
+				<input id="inputField" required autofocus />
+				<label id="inputLabel"></label>
+				<div id="inputProgress"></div>
+			</div>
+
+		</div>
+
+		<p class="login">Already Registered? <a href="login.html">Login</a></p>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+	<script src="js/signup.js"></script>
+</body>
+</html>
