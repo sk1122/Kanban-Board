@@ -4,7 +4,8 @@ import (
 	"net/http"
 	"github.com/gin-gonic/gin"
 	"Backend/Main/models"
-	"fmt"
+	_"bytes"
+	_"encoding/json"
 
 	"Backend/Main/middleware"
 )
@@ -17,6 +18,13 @@ type CreateTodoInput struct {
 type UpdateTodoInput struct {
 	Todo 	 string `json: "todo"`
 	Category string `json: "category"`
+}
+
+type UpdateTodoInputList struct {
+	Todo  []string `json: "todo"`
+	Doing []string `json: "doing"`
+	Done  []string `json: "done"`
+	Trash []string `json: "trash"`
 }
 
 // POST REQUEST
@@ -57,26 +65,6 @@ func AllTodo(c *gin.Context) {
 	var todo []models.TodoData
 
 	models.DB.Where("Username = ?", User).Find(&todo)
-
-	fmt.Println(todo)
-
-	c.JSON(http.StatusOK, gin.H{"data": todo})
-}
-
-func AllTodoList(c *gin.Context) {
-
-	User, errr := middleware.GetUser(c.Request)
-
-	if errr != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"data": errr.Error()})
-		return
-	}
-
-	var todo models.TodoDataList
-
-	models.DB.Where("Username = ?", User).First(&todo)
-
-	fmt.Println(todo)
 
 	c.JSON(http.StatusOK, gin.H{"data": todo})
 }
@@ -132,6 +120,34 @@ func UpdateTodo(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": todo})
 }
 
+func UpdateTodoBool(todo, category, user string) {
+	var todoData models.TodoData
+
+	if err := models.DB.Where("Todo = ? AND Username = ?", todo, user).First(&todoData).Error; err != nil {
+		return
+	}
+
+	input := UpdateTodoInput{Todo: todo, Category: category}
+	models.DB.Model(&todoData).Updates(input)
+} 
+
+func CreateTodoFromList(todo []string, category, user string) {
+	for i:=0;i<len(todo);i++ {
+		if middleware.CheckIfTodoExists(todo[i], category, user) {
+			continue
+		}
+		if todo[i] == "" {
+			continue
+		}
+		if middleware.CheckIfTodo(todo[i], user) {
+			UpdateTodoBool(todo[i], category, user)
+			continue
+		}
+		todo := models.TodoData{Todo: todo[i], Category: category, Username: user}
+		models.DB.Create(&todo)
+	}
+}
+
 func PostTodoList(c *gin.Context) {
 
 	User, errr := middleware.GetUser(c.Request)
@@ -141,16 +157,17 @@ func PostTodoList(c *gin.Context) {
 		return
 	}
 
-	var input models.TodoDataList
+	var input UpdateTodoInputList
 
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		c.JSON(http.StatusBadRequest, gin.H{"data": err.Error()})
+		return	
 	}
 
-	list := models.TodoDataList{Todo: input.Todo, Doing: input.Doing, Done: input.Done, Trash: input.Trash, Username: User}
+	CreateTodoFromList(input.Todo, "Todo", User)
+	CreateTodoFromList(input.Done, "Done", User)
+	CreateTodoFromList(input.Doing, "Doing", User)
+	CreateTodoFromList(input.Trash, "Trash", User)
 
-	models.DB.Create(&list)
-
-	c.JSON(http.StatusOK, gin.H{"data": list})
+	c.JSON(http.StatusOK, gin.H{"data": input})
 }

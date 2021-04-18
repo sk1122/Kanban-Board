@@ -1,16 +1,35 @@
 
-// setInterval(function() {
-// 	let todo = localStorage.getItem("todo")
-// 	let doing = localStorage.getItem("doing")
-// 	let done = localStorage.getItem("done")
-// 	let trash = localStorage.getItem("trash")
+list = ["todo", "doing", "done", "trash"]
+list1 = ["Todo", "Doing", "Done", "Trash"]
 
-// 	postData(todo, doing, done, trash)
-// }, 10000)
+function a() {
+	let todo = localStorage.getItem("todo")
+	todo = todo.split(",")
+	let doing = localStorage.getItem("doing")
+	doing = doing.split(",")
+	let done = localStorage.getItem("done")
+	done = done.split(",")
+	let trash = localStorage.getItem("trash")
+	trash = trash.split(",")
+
+	postData(todo, doing, done, trash)
+}
+
+setInterval(a, 10000)
+
+function getHtmlForDrag(data) {
+	return `<div class="item" draggable="true">${data}</div>`
+}
+
+function appendData(data) {	
+	if(data == "")
+		return
+	document.getElementById(data.Category.toLowerCase()).innerHTML += getHtmlForDrag(data.Todo)
+}
 
 function requestData() {
 	$.ajax({
-		url: "/api/list",
+		url: "/api/get",
 		type: "GET",
 		headers: {"Authorization": `Bearer ${localStorage.getItem('access_token')}`},
 
@@ -19,27 +38,42 @@ function requestData() {
 			let len = response["data"].length
 
 			console.log(data)
+
+			for(let i=0;i<len;i++)
+				appendData(data[i])
+		},
+
+		error: function(response) {
+			console.log(response)
 		}
 	})
 }
 
 function postData(todo, doing, done, trash) {
+	
+	let dataToPost = {
+		"todo": todo,
+		"doing": doing,
+		"done": done,
+		"trash": trash
+	}
+
 	$.ajax({
 		url: "/api/todo/list",
 		type: "POST",
-		data: {
-			"todo": todo,
-			"doing": done,
-			"done": done,
-			"trash": trash,
-		},
-		dataType: "json",
+		data: JSON.stringify(dataToPost),
+		headers: {"Authorization": `Bearer ${localStorage.getItem('access_token')}`},
+		dataType: "text",
 
 		success: function(response) {
-			console.log(response)
+			console.log("Successful")
 		},
 
 		error: function(response) {
+			console.log("Error")
 		}
 	})
 }
+
+// Document Loads
+requestData()

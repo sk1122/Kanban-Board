@@ -27,7 +27,6 @@ func main() {
 	router.GET("/todo/:id",middleware.TokenAuthMiddleware(), controllers.FindTodo)
 	router.PATCH("/todo/update/:id",middleware.TokenAuthMiddleware(), controllers.UpdateTodo)
 	router.POST("/todo/list",middleware.TokenAuthMiddleware(), controllers.PostTodoList)
-	router.GET("/list",middleware.TokenAuthMiddleware(), controllers.AllTodoList)
 
 	router.Run()
 }
