@@ -17,7 +17,7 @@ func LoginUser(c *gin.Context) {
 	var u LoginUserData
 
 	if err := c.ShouldBindJSON(&u); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"errors": err.Error()})
 		return
 	}
 
@@ -29,7 +29,7 @@ func LoginUser(c *gin.Context) {
 		access_token, refresh_token, err := helper.CreateToken(u.Username)
 
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"errosr": err.Error()})
 			return
 		}
 
