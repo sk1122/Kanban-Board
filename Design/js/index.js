@@ -5,6 +5,26 @@ var trash = []
 
 var list_items = document.querySelectorAll(".item");
 var lists = document.querySelectorAll(".list-items")
+var container = document.getElementById('container')
+
+function checkDblClickHeader(list) {
+	for(let i=0;i<list.length;i++) {
+		const element = list[i];
+		const header = element.parentElement.firstElementChild
+
+		header.addEventListener('dblclick', function(e) {
+			e.preventDefault()
+			header.setAttribute("contenteditable", "true")
+			console.log("SA")
+
+			header.addEventListener("dblclick", function(e) {
+				e.preventDefault()
+				header.removeAttribute("contenteditable", "true")
+			})
+		})
+	}
+}
+checkDblClickHeader(lists)
 
 for(let i = 0; i < lists.length; i++) {
 	if(lists[i].childElementCount === 0) {
@@ -12,6 +32,7 @@ for(let i = 0; i < lists.length; i++) {
 	} else {
 		lists[i].classList.remove("wh")
 	}
+
 }
 
 var draggedItem = null;
@@ -94,7 +115,6 @@ function removeItem(item, list) {
 }
 
 function addList(list) {
-	console.log(list)
 	if(list.classList.contains("todo-list")) {
 		if(!todo.includes(draggedItem.textContent)) {
 			todo.push(draggedItem.textContent);
@@ -126,10 +146,12 @@ function check_drag() {
 	for(let i = 0; i < list_items_length; i++) {
 		const item = list_items[i];
 
-		item.addEventListener("dblclick", function() {
+		item.addEventListener("dblclick", function(e) {
+			e.preventDefault()
 			item.setAttribute("contenteditable", "true")
 
-			item.addEventListener("dblclick", function() {
+			item.addEventListener("dblclick", function(e) {
+				e.preventDefault()
 				item.removeAttribute("contenteditable", "true")
 			})
 		})
@@ -189,6 +211,8 @@ const inputHandler = () => {
 	  var wTime = 200  // transition width time from #register in ms
 	  var eTime = 1000 // transition width time from inputLabel in ms
 
+	  var toggle = document.getElementById('toggle')
+
 	  // init
 	  // --------------
 	  var position = 0
@@ -206,7 +230,14 @@ const inputHandler = () => {
 
 	  // load the next question
 	  function putQuestion() {
-	    inputLabel.innerHTML = "What do you want to do today?"
+	  	inputLabel.innerHTML = "What do you want to do today?";
+	  	toggle.addEventListener('click', function() {
+	  		if(toggle.checked) {
+	    		inputLabel.innerHTML = "What do you want to do today?";
+	  		} else {
+	  			inputLabel.innerHTML = "What Column do you want to add?"
+	  		}
+	  	})
 	    inputField.value = ''
 	    inputField.type = 'text'  
 	    inputField.focus()
@@ -215,13 +246,23 @@ const inputHandler = () => {
 	  
 	  // when all the questions have been answered
 	  async function done() {
-	    let appendDatas = `<div class="item" draggable="true">${inputField.value}</div>`
-		lists[0].innerHTML += appendDatas;
-		todo.push(inputField.value);
-		localStorage.setItem("todo", todo)
-		lists[0].classList.remove("wh")
+  		if(toggle.checked == true) {
+		    let appendDatas = `<div class="item" draggable="true">${inputField.value}</div>`
+			lists[0].innerHTML += appendDatas;
+			todo.push(inputField.value);
+			localStorage.setItem("todo", todo)
+			lists[0].classList.remove("wh")
 
-		list_items = document.querySelectorAll(".item");
+			list_items = document.querySelectorAll(".item");
+		} else {
+			container.innerHTML += `<div class="${inputField.value} list">
+				<div class="header">${inputField.value}</div>
+				<div class="list-items ${inputField.value}-list" id="${inputField.value}">
+				</div>
+			</div>`
+			lists = document.querySelectorAll(".list-items")
+			checkDblClickHeader(lists)
+		}
 	  }
 
 	  // helper
